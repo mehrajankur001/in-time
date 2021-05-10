@@ -2,7 +2,7 @@ const User = require('../model/users');
 const bcrypt = require('bcryptjs');
 const { SECRET } = require('../config/config');
 const passport = require('passport');
-//user registration
+const jwt = require('jsonwebtoken');
 const registerUser = async (userInfo, res, role) => {
     try {
         console.log(userInfo.firstName)
@@ -26,10 +26,9 @@ const registerUser = async (userInfo, res, role) => {
             password: hashedPassword,
             role
         });
-        console.log(newUser)
-        console.log('_____')
         //creating the token
         const token = await newUser.generateToken();
+        res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 600000000) });
         console.log(newUser)
         await newUser.save();
         res.render('home');
@@ -42,8 +41,6 @@ const registerUser = async (userInfo, res, role) => {
         })
     }
 }
-
-//validate user email
 const validateUserEmail = async (email) => {
     const user = await User.findOne({ email });
     if (!user) {
@@ -56,13 +53,10 @@ const validateUserEmail = async (email) => {
     // return user ? false : true;
 }
 
-//user login
 const loginUser = async (userInfo, res, role) => {
     try {
-        console.log(userInfo);
         let { email, password } = userInfo
         const user = await User.findOne({ email });
-        console.log(user + '11user');
         if (!user) {
             return res.status(403).json({
                 message: 'User Not Found !!!'
@@ -82,8 +76,7 @@ const loginUser = async (userInfo, res, role) => {
             });
         } else {
             const token = await user.generateToken();
-            console.log(token + ' aaa')
-            res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 600000000) });
+            res.cookie('jwt', token, { httpOnly: true });
             return res.redirect('/products');
         }
     } catch (error) {
@@ -94,19 +87,6 @@ const loginUser = async (userInfo, res, role) => {
     }
 }
 
-//check Cookie
-// const checkCookie = async (req, res, next) => {
-//     try {
-//         const token = req.cookie.jwt;
-//         await jwt.compare(token, SECRET);
-//         next();
-//     } catch (error) {
-//         res.status(404).json({
-//             message: "Something went wrong, Come back later",
-//             success: false
-//         });
-//     }
-// }
 const userAuth = passport.authenticate('jwt');
 
 const checkRole = roles => (req, res, next) =>
@@ -115,9 +95,37 @@ const checkRole = roles => (req, res, next) =>
         : next();
 
 
+// const logout = async (req, res) => {
+//     try {
+//         await res.clearCookie('jwt');
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
+//check Cookie
+const checkCookie = async (req, res, next) => {
+    try {
+        const token = req.cookies.jwt;
+        const verifyToken = await jwt.verify(token, SECRET);
+        const user = await User.findOne({ _id: verifyToken.user_id });
+        req.user = user;
+        req.token = token
+        next();
+    } catch (error) {
+        res.status(404).json({
+            message: "Something went wrong, Come back later",
+            success: false
+        });
+    }
+}
+
 module.exports = {
+    checkCookie,
     registerUser,
     loginUser,
     userAuth,
-    checkRole
+    checkRole,
+    //logout
 }
+

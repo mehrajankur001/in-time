@@ -61,4 +61,8 @@ app.use('/deleveryMan', deleveryManRoute);
 const userRoute = require('./router/user');
 app.use('/user', userRoute);
 
+//logout Route
+const logoutRoute = require('./router/logout');
+app.use('/logout', logoutRoute);
+
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));

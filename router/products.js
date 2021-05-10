@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
-const { userAuth, checkRole } = require('../middlewere/auth');
+const { userAuth, checkCookie, checkRole } = require('../middlewere/auth');
 const Product = require('../model/product');
 
 //index
-router.get('/', userAuth, checkRole(['admin']), async (req, res) => {
+router.get('/', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
   let query = Product.find();
   const searchOptions = {};
 

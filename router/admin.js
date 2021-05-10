@@ -10,13 +10,10 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    console.log(req.body)
     await loginUser(req.body, res, 'admin');
 
 })
 router.post('/register', async (req, res) => {
-    console.log(req.body)
-    console.log('----')
     await registerUser(req.body, res, 'admin');
 })
 
