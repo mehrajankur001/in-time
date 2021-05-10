@@ -1,0 +1,30 @@
+
+<div class="row">
+    <div class="col">
+        <form action="/products/<%= product.id %>/updateProductStatus?_method=PUT" method="post">
+            <select name="currentStatus" class="form-select" aria-label="Default select example">
+                <option label="Pcked Up" value="Picked Up">
+                <option label="Left Facility" value="Left Facility">
+                <option label="Out For Delevery" value="Out For Delevery">
+              </select>
+            <div class="btn-group">
+                <button class="btn btn-lg btn-outline-dark">Update</button>
+                <button class="btn btn-lg btn-outline-dark"><a href="/products">Cancel</a></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <form action="/products/<%= product.id %>/updateProductStatus?_method=PUT" method="post">
+            <div class="input-group mb-3">
+                <label for="" class="form-control">OTP Number:</label>
+                <input name="otpNumber" class="form-control" type="number">
+            </div>
+                <button class="btn btn-lg btn-outline-dark">Delevered</button>
+                <button class="btn btn-lg btn-outline-dark"><a href="/products">Cancel</a></button>
+            </div>
+        </form>
+    </div>
+</div>

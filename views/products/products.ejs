@@ -1,0 +1,30 @@
+<div class="row mb-3">
+    <div class="col">
+        <form action="/products" method="GET">
+        <div class="input-group mb-3">
+            <label class="form-control">Receiver Name</label>
+            <input class="form-control" type="text" name="receiverName" value="<%= searchOptions.receiverName %>">
+        </div>
+        <button class="btn btn-success w-100" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <% products.forEach(product =>{ %> 
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-3">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Receciver: <%= product.receiverName %></li>
+                    <li class="list-group-item">Sender: <%= product.senderName %></li>
+                    <li class="list-group-item">Receiver Number: <%= product.receiverNumber %></li>
+                </ul>
+                <a href="/products/<%= product.id %>">
+                    <button class="btn btn-lg w-100 btn-outline-warning">View Details</button>
+                </a>
+            </div>
+        </div>
+    <% }); %> 
+</div>
+
+

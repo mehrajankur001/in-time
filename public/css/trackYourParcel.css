@@ -1,0 +1,56 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container-fluid{
+  text-align: center;
+}
+
+#picked-up,
+#left-facility,
+#out-for-delevery,
+#delevered {
+  color: black;
+  margin: 10px 5px;
+  padding: 10px 20px;
+  width: 100%;
+  height: 120px;
+  border-radius: 4px;
+  text-align: center;
+  border: 2px solid black;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.shows {
+  color: yellowgreen;
+  background-color: yellow;
+}
+
+.tracking-div {
+  width: 100%;
+}
+
+.red {
+  color: black;
+  background-color: gray;
+}
+
+.n-d {
+  color: black;
+  background-color: gray;
+  border-radius: 80%;
+  border: 1px solid black;
+}
+
+.d {
+  background-color: limegreen;
+  border-radius: 80%;
+  border: 1px solid black;
+}

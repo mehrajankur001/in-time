@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="/css/trackYourParcel.css">
+<div class="row">
+    <div class="col">
+        <form action="/trackYourParcel" method="GET">
+        <div class="input-group mb-3">
+            <input class="form-control" type="text" name="trackingId" placeholder=" Enter Parcel Tracing ID" value="<%= searchOptions.trackingId %>">
+        </div>
+        <button class="btn btn-warning w-100" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<% if(searchOptions.trackingId != null && searchOptions.trackingId != ''){ %>
+    <% products.forEach(product => { %> 
+        <% if(product.trackingId === searchOptions.trackingId) {%> 
+            <div class="container-fluid mb-3 tracking-div">
+                <div id="picked-up" class="bg-danger">
+                    <h4><i id="1" class="fal fa-check-circle n-d"></i></h4>
+                    <h5>Your Product Has Been Picked Up</h5>
+                </div>
+                <div id="left-facility" class="bg-danger">
+                    <h4><i id="2" class="fal fa-check-circle n-d"></i></h4>
+                    </i> <h5>Your Product Has left In Time Facility</h5>
+                </div>
+                <div id="out-for-delevery" class="bg-danger">
+                    <h4><i id="3" class="fal fa-check-circle n-d"></i></h4>
+                    <h5>Your Product Has left for Delevery</h5>
+                </div>
+                <div id="delevered" class="bg-danger">
+                    <h4><i id="4" class="fal fa-check-circle n-d"></i></h4>
+                    <h5>Product Delevered</h5>
+                </div>
+            </div>
+            <div class="card border-warning mb-3">
+                <div class="card-header">
+                    <h4>Receiver Info</h4>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title"><%= product.receiverName %> </h5>
+                  <h5 class="card-title">Num: <%= product.receiverNumber %></h5>
+                  <p class="card-text">Address: <%= product.receiverAddress %>.</p>
+                </div>
+                <div class="card-header">
+                    <h4>Sender Info</h4>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title"><%= product.senderName %></h5>
+                  <h5 class="card-title">Num: <a href="tel:<%= product.senderNumber %>"><%= product.senderNumber %></a></h5>
+                </div>
+                <div class="card-header">
+                    <h3 class="card-title">OTP: <%= product.otpNumber %></h3>
+                </div>
+            </div>
+        <% } %>
+    <% }); %>
+<% } %>  
+
+
+
+<script src="/js/trackYourParcel.js"></script>
