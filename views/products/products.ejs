@@ -14,13 +14,20 @@
     <% products.forEach(product =>{ %> 
         <div class="col-lg-3 col-md-6">
             <div class="card mb-3">
+                <div class="card-header">
+                    <h2><%= product.currentStatus %></h2>
+                </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Receciver: <%= product.receiverName %></li>
                     <li class="list-group-item">Sender: <%= product.senderName %></li>
                     <li class="list-group-item">Receiver Number: <%= product.receiverNumber %></li>
+                    <li class="list-group-item">Current Status: <%= product.currentStatus %></li>
                 </ul>
                 <a href="/products/<%= product.id %>">
-                    <button class="btn btn-lg w-100 btn-outline-warning">View Details</button>
+                    <button class="btn btn-lg w-100 btn-outline-warning mb-2">View Details</button>
+                </a>
+                <a href="/products/<%= product.id %>/editProductStatus ">
+                    <button class="btn btn-lg btn-outline-warning w-100">Update Status</button>
                 </a>
             </div>
         </div>

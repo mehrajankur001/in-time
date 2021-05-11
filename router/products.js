@@ -5,7 +5,7 @@ const { userAuth, checkCookie, checkRole } = require('../middlewere/auth');
 const Product = require('../model/product');
 
 //index
-router.get('/', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
+router.get('/', checkCookie, userAuth, checkRole(['delevery-man', 'admin']), async (req, res) => {
   let query = Product.find();
   const searchOptions = {};
 
@@ -43,6 +43,52 @@ router.get('/', checkCookie, userAuth, checkRole(['admin']), async (req, res) =>
     res.redirect('/');
   }
 });
+//edit status
+router.get('/:id/editProductStatus', checkCookie, userAuth, checkRole(['delevery-man', 'admin']), async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.render('products/editProductStatus', { product: product });
+  } catch (error) { }
+});
+
+//update status
+router.put('/:id/updateProductStatus', checkCookie, userAuth, checkRole(['delevery-man', 'admin']), async (req, res) => {
+  let product, params;
+  try {
+    product = await Product.findById(req.params.id);
+
+    if (req.body.otpNumber == null) {
+      product.currentStatus = req.body.currentStatus;
+      await product.save();
+      if (req.user.role === 'admim') {
+        res.redirect(`/products/${product.id}`);
+      } else {
+        res.redirect('/products');
+      }
+    } else {
+      if (req.body.otpNumber == product.otpNumber) {
+        product.currentStatus = 'Delevered';
+        console.log('true');
+        await product.save();
+        if (req.user.role === 'admim') {
+          res.redirect(`/products/${product.id}`);
+        } else {
+          res.redirect('/products');
+        }
+      } else {
+        product.currentStatus = product.currentStatus;
+        await product.save();
+        res.render('products/editProductStatus', { product: product, errorMessage: 'Wrong OTP' })
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.redirect('/products');
+  }
+});
+
+//all routes
+router.all('*', checkCookie, userAuth, checkRole(['admin']));
 
 //new
 router.get('/new', async (req, res) => {
@@ -109,38 +155,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.get('/:id/editProductStatus', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    res.render('products/editProductStatus', { product: product });
-  } catch (error) { }
-});
-
-//update
-router.put('/:id/updateProductStatus', async (req, res) => {
-  let product;
-  try {
-    product = await Product.findById(req.params.id);
-
-    if (req.body.otpNumber == null) {
-      product.currentStatus = req.body.currentStatus;
-    } else {
-      if (req.body.otpNumber == product.otpNumber) {
-        product.currentStatus = 'Delevered';
-        console.log('true');
-      } else {
-        product.currentStatus = product.currentStatus;
-      }
-    }
-
-    await product.save();
-    res.redirect(`/products/${product.id}`);
-  } catch (error) {
-    console.log(error);
-    res.redirect('/products');
-  }
-});
-
 router.delete('/:id', async (req, res) => {
   let product;
   try {
@@ -152,6 +166,9 @@ router.delete('/:id', async (req, res) => {
     res.render(`/products/${product.id}`);
   }
 });
+
+
+
 
 async function renderFormPage(res, product, form, hasError = false) {
   try {

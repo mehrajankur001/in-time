@@ -91,7 +91,7 @@ const userAuth = passport.authenticate('jwt');
 
 const checkRole = roles => (req, res, next) =>
     !roles.includes(req.user.role)
-        ? res.status(401).json("Unauthorized Sad")
+        ? res.status(401).render('partials/unauthorized')
         : next();
 
 
@@ -113,10 +113,7 @@ const checkCookie = async (req, res, next) => {
         req.token = token
         next();
     } catch (error) {
-        res.status(404).json({
-            message: "Something went wrong, Come back later",
-            success: false
-        });
+        res.status(404).render('partials/unauthorized')
     }
 }
 
