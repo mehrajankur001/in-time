@@ -50,9 +50,7 @@ const loginUser = async (userInfo, res, role) => {
         let { email, password } = userInfo
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(403).json({
-                message: 'User Not Found !!!'
-            });
+            return res.status(402).render(`users/${role}/login`, { errorMessage: 'Incorrect Login Details' });
         }
 
         if (user.role !== role) {
@@ -63,13 +61,11 @@ const loginUser = async (userInfo, res, role) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(405).json({
-                message: 'Incorrect Password !!!'
-            });
+            return res.status(405).render(`users/${role}/login`, { errorMessage: 'Incorrect Login Detail' });
         } else {
             const token = await user.generateToken();
             res.cookie('jwt', token, { httpOnly: true });
-            return res.redirect(`/${role}`);
+            return res.redirect(`/users/profile`);
         }
     } catch (error) {
         console.log(error);

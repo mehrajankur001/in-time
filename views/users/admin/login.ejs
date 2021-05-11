@@ -1,5 +1,4 @@
 <form action="/admin/login" method="post">
-
     <div class="row">
         <div class="col-sm-8">
             <div class="card">
@@ -17,5 +16,21 @@
             </div>
         </div>
     </div>
-
 </form>
+
+<% if(locals.errorMessage != null ){ %>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2><%= errorMessage  %> </h2>
+                </div>
+                <div class="card-header">
+                    <a href="/users/reset-password-p1">
+                        <button class="btn btn-lg btn-outline-dark">reset password</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>  

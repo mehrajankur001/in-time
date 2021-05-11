@@ -18,20 +18,7 @@ router.post('/register', async (req, res) => {
     await registerUser(req.body, res, 'admin');
 })
 
-
 router.get('/', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        console.log(user);
-        res.status(200).render('users/admin/profile', { user: user });
-    } catch (error) {
-        res.json({
-            message: 'Oh No'
-        })
-    }
-})
-
-router.get('/all', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
     let query = User.find({ role: 'admin' });
     if (req.query.firstName != null && req.query.firstName !== '') {
         query = query.regex('firstName', new RegExp(req.query.firstName, 'i'));
@@ -79,6 +66,18 @@ router.put('/:id', checkCookie, userAuth, checkRole(['admin']), async (req, res)
         await updateUser(req.body, res, req)
     } catch (error) {
         console.log(error);
+        res.json({
+            message: 'Oh No'
+        })
+    }
+});
+
+router.delete('/:id', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        console.log(user);
+        res.status(200).redirect('/admin/all');
+    } catch (error) {
         res.json({
             message: 'Oh No'
         })

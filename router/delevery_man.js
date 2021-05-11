@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
     await registerUser(req.body, res, 'delevery-man');
 })
 
-router.get('/all', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), async (req, res) => {
+router.get('/', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), async (req, res) => {
     let query = User.find({ role: 'delevery-man' });
     const searchOptions = {}
     if (req.query.firstName != null && req.query.firstName !== '') {
@@ -38,18 +38,6 @@ router.get('/all', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), 
         })
     }
 });
-
-router.get('/', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        console.log(user);
-        res.status(200).render('users/delevery-man/profile', { user: user });
-    } catch (error) {
-        res.json({
-            message: 'Oh No'
-        })
-    }
-})
 
 router.get('/:id', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), async (req, res) => {
     try {
@@ -84,4 +72,17 @@ router.put('/:id', checkCookie, userAuth, checkRole(['admin', 'delevery-man']), 
         })
     }
 });
+
+router.delete('/:id', checkCookie, userAuth, checkRole(['admin']), async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        console.log(user);
+        res.status(200).redirect('/delevery-man/all');
+    } catch (error) {
+        res.json({
+            message: 'Oh No'
+        })
+    }
+});
+
 module.exports = router

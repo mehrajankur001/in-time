@@ -16,12 +16,9 @@
           <h5 class="card-title">Nember: <a href="tel:<%= user.phoneNumber %>"><%= user.phoneNumber %></a> </h5>
           <h5 class="card-text">Email: <%= user.email %>.</h5>
         </div>
-        <a href="/products/<%= user.id %>/editProductStatus ">
-            <button class="btn btn-lg btn-warning w-100 mb-2">Update Status</button>
-        </a>
         <a href="/delevery-man/<%= user.id %>/edit">
             <button class="btn btn-lg btn-warning w-100 mb-2">Edit</button>
         </a>
-        <%- include('../../partials/delete', {url: `/products/${user.id}`}) %> 
+        <%- include('../../partials/delete', {url: `/delevery-man/${user.id}`}) %> 
     </div>
 </div><br><br>

@@ -49,6 +49,10 @@ app.use('/products', productRoute);
 const parcelTrackingRoute = require('./router/trackYourParcel');
 app.use('/trackYourParcel', parcelTrackingRoute);
 
+//Users Route
+const usersRoute = require('./router/users');
+app.use('/users', usersRoute);
+
 //Admin Route
 const adminRoute = require('./router/admin');
 app.use('/admin', adminRoute);
