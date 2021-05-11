@@ -1,0 +1,38 @@
+<div class="row mb-3">
+    <div class="col">
+        <form action="/delevery-man/all" method="GET">
+        <div class="input-group mb-3">
+            <label class="form-control">First Name</label>
+            <input class="form-control" type="text" name="firstName" value="<%= searchOptions.firstName %>">
+        </div>
+        <div class="input-group mb-3">
+            <label class="form-control">Last Name</label>
+            <input class="form-control" type="text" name="lastName" value="<%= searchOptions.lastName %>">
+        </div>
+        <button class="btn btn-success w-100" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <% users.forEach(user =>{ %> 
+        <div class="col-lg-3 col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h2><%= user.firstName %> <%= user.lastName %></h2>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Number: <%= user.phoneNumber %></li>
+                    <li class="list-group-item">Sender: <%= user.email %></li>
+                    <li class="list-group-item">Role: <%= user.role %></li>
+                </ul>
+                <a href="/admin/<%= user.id %>">
+                    <button class="btn btn-lg w-100 btn-outline-warning mb-2">View Details</button>
+                </a>
+                <a href="/users/<%= user.id %>/editProductStatus ">
+                    <button class="btn btn-lg btn-outline-warning w-100">Update Status</button>
+                </a>
+            </div>
+        </div>
+    <% }); %> 
+</div>

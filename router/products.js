@@ -28,7 +28,7 @@ router.get('/', checkCookie, userAuth, checkRole(['delevery-man', 'admin']), asy
     );
   }
   if (req.query.receiverNumber != null && req.query.receiverNumber !== '') {
-    searchOptions.receiverNumber = req.query.receiverNumber;
+    query.receiverNumber = req.query.receiverNumber;
   }
 
   try {

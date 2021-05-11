@@ -55,7 +55,7 @@ app.use('/admin', adminRoute);
 
 //deleveryMan Route
 const deleveryManRoute = require('./router/delevery_man');
-app.use('/deleveryMan', deleveryManRoute);
+app.use('/delevery-man', deleveryManRoute);
 
 //user Route
 const userRoute = require('./router/user');

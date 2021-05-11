@@ -1,0 +1,32 @@
+<div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" class="form-control" name="firstName" value="<%= user.firstName%>" >
+</div>
+<div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" class="form-control" name="lastName" value="<%= user.lastName%>" >
+</div>
+<label for="gender">Gender</label>
+<select name="gender" class="form-select" aria-label="Default select example">
+    <option label="Male" value="male" selected>
+    <option label="female" value="female">
+</select>
+<div class="form-group">
+    <label for="phoneNumber">Phone Number</label>
+    <input type="tel" class="form-control" name="phoneNumber" value="<%= user.phoneNumber%>" >
+</div>
+<div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" name="email" value="<%= user.email%>">
+</div>
+
+<div class="form-group">
+    <label for="password">Last Password</label>
+    <input type="password" class="form-control" name="lastPassword" autocomplete="off">
+</div>
+
+<div class="form-group">
+    <label for="password">New Password</label>
+    <input type="password" class="form-control" name="password">
+</div>
+               
