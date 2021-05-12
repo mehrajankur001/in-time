@@ -1,4 +1,5 @@
 const User = require('../model/users');
+const TempUser = require('../model/temp')
 const bcrypt = require('bcryptjs');
 const { SECRET } = require('../config/config');
 const passport = require('passport');
@@ -147,9 +148,27 @@ const checkCookie = async (req, res, next) => {
         const verifyToken = await jwt.verify(token, SECRET);
         const user = await User.findOne({ _id: verifyToken.user_id });
         req.user = user;
+        console.log(req.user + 'user cookie')
         req.token = token
+        req.verifyToken = verifyToken;
         next();
     } catch (error) {
+        res.status(404).render('partials/unauthorized')
+    }
+}
+
+const resetPassCookie = async (req, res, next) => {
+    try {
+        const token = req.cookies.jwt;
+        const verifyToken = await jwt.verify(token, SECRET);
+        const user = await TempUser.findOne({ _id: verifyToken.user_id });
+        req.user = user;
+        console.log(req.user + 'user cookie')
+        req.token = token
+        req.verifyToken = verifyToken;
+        next();
+    } catch (error) {
+        console.log(error)
         res.status(404).render('partials/unauthorized')
     }
 }
@@ -161,6 +180,7 @@ module.exports = {
     userAuth,
     checkRole,
     logout,
-    updateUser
+    updateUser,
+    resetPassCookie
 }
 

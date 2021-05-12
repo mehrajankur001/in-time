@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema({
         default: 'user',
         enum: ['admin', 'delevery-man', 'user']
     },
+    secretCode: [
+        {
+            code: {
+                type: String
+            }
+        }
+    ],
     tokens: [
         {
             token: {
