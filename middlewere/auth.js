@@ -27,8 +27,6 @@ const registerUser = async (userInfo, res, role) => {
         await newUser.save();
         return res.redirect(`/${role}`);
     } catch (error) {
-        //res.render(`/users/${role}/register`, { errorMessage: "User Not Registered" });
-        //console.log(error)
         return res.status(404).json({
             message: "Something Wrong"
         })
@@ -37,32 +35,31 @@ const registerUser = async (userInfo, res, role) => {
 const validateUserEmail = async (email) => {
     const user = await User.findOne({ email });
     if (!user) {
-        console.log(true);
+
         return true
     } else {
-        console.log(false);
         return false
     }
     // return user ? false : true;
 }
 
-const loginUser = async (userInfo, res, role) => {
+const loginUser = async (userInfo, res) => {
     try {
         let { email, password } = userInfo
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(402).render(`users/${role}/login`, { errorMessage: 'Incorrect Login Details' });
+            return res.status(402).render(`login`, { errorMessage: 'Incorrect Login Details' });
         }
 
-        if (user.role !== role) {
-            return res.status(406).json({
-                message: 'Login from right Portal !!!'
-            });
-        }
+        // if (user.role !== role) {
+        //     return res.status(406).json({
+        //         message: 'Login from right Portal !!!'
+        //     });
+        // }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(405).render(`users/${role}/login`, { errorMessage: 'Incorrect Login Detail' });
+            return res.status(405).render(`login`, { errorMessage: 'Incorrect Login Detail' });
         } else {
             const token = await user.generateToken();
             res.cookie('jwt', token, { httpOnly: true });
@@ -109,6 +106,7 @@ const updateUser = async (userInfo, res, req) => {
         user.firstName = userInfo.firstName;
         user.lastName = userInfo.lastName;
         user.email = userInfo.email;
+        user.phoneNumber = userInfo.phoneNumber;
         user.gender = userInfo.gender;
         user.password = user.password;
         console.log(user)
@@ -136,7 +134,7 @@ const logout = async (req, res) => {
         });
         res.clearCookie('jwt');
         await req.user.save();
-        res.redirect(`/${req.user.role}/login/`);
+        res.redirect(`/login`);
     } catch (error) {
         console.log(error)
     }
@@ -148,7 +146,6 @@ const checkCookie = async (req, res, next) => {
         const verifyToken = await jwt.verify(token, SECRET);
         const user = await User.findOne({ _id: verifyToken.user_id });
         req.user = user;
-        console.log(req.user + 'user cookie')
         req.token = token
         req.verifyToken = verifyToken;
         next();
@@ -163,7 +160,6 @@ const resetPassCookie = async (req, res, next) => {
         const verifyToken = await jwt.verify(token, SECRET);
         const user = await TempUser.findOne({ _id: verifyToken.user_id });
         req.user = user;
-        console.log(req.user + 'user cookie')
         req.token = token
         req.verifyToken = verifyToken;
         next();
@@ -173,6 +169,26 @@ const resetPassCookie = async (req, res, next) => {
     }
 }
 
+const resetPassword = async (userInfo, res, req) => {
+
+    try {
+        let user = await User.findById(req.params.id);
+        if (userInfo.password != null && userInfo.password !== '') {
+            if (userInfo.confirmPassword != null && userInfo.confirmPassword !== '') {
+                user.password = await bcrypt.hash(userInfo.password, 10);
+            }
+        }
+        await user.save();
+        res.redirect(`/login`)
+    } catch (error) {
+        console.log(error + 'at reset password')
+        res.status(404).json({
+            message: " Inn Sha Allah I can fix it :)"
+        })
+    }
+}
+
+
 module.exports = {
     checkCookie,
     registerUser,
@@ -181,6 +197,7 @@ module.exports = {
     checkRole,
     logout,
     updateUser,
-    resetPassCookie
+    resetPassCookie,
+    resetPassword
 }
 

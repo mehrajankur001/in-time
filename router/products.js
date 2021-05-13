@@ -167,9 +167,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-
-
-
 async function renderFormPage(res, product, form, hasError = false) {
   try {
     const params = { product: product };
@@ -184,7 +181,6 @@ async function renderFormPage(res, product, form, hasError = false) {
         params.errorMessage = 'Error Editing Product';
       }
     }
-    console.log(params);
     res.render(`products/${form}`, params);
   } catch (error) {
     res.redirect('/');

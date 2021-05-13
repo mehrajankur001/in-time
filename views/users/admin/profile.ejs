@@ -1,5 +1,22 @@
-<label for="">First Name</label>: <span><%= user.firstName %> </span><br>
-<label for="">Last Name</label>: <span><%= user.lastName %> </span><br>
-<label for="">Email</label>: <span><%= user.email %> </span><br>
-<label for="">Number</label>: <span><%= user.phoneNumber %> </span><br>
-<label for="">Role</label>: <span><%= user.role %> </span><br>
+<style>
+    a{
+        text-decoration: none;
+    }
+</style>
+
+<div class="container">
+    <div class="card border-warning">
+        <div class="card-header">
+            <h5>Name:<%= user.firstName %> <%= user.lastName %></h5>
+        </div>
+        <div class="card-body">
+          <h4>Info</h4>
+          <hr>
+          <h5 class="card-title"><%= user.role %> </h5>
+          <h5 class="card-title">Nember: <a href="tel:<%= user.phoneNumber %>"><%= user.phoneNumber %></a> </h5>
+          <h5 class="card-text">Email: <%= user.email %>.</h5>
+        </div>
+        <a href="/admin/<%= user.id %>/edit">
+            <button class="btn btn-lg btn-warning w-100 mb-2">Edit</button>
+        </a>
+    </div>

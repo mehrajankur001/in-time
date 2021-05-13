@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const User = require('../model/users');
 const { checkCookie, logout } = require('../middlewere/auth');
 
 router.get('/', checkCookie, async (req, res) => {
@@ -11,7 +10,7 @@ router.get('/allDevices', checkCookie, async (req, res) => {
         req.user.tokens = [];
         res.clearCookie('jwt');
         await req.user.save();
-        res.redirect(`/${req.user.role}/login/`);
+        res.redirect(`/login`);
     } catch (error) {
         console.log(error)
     }

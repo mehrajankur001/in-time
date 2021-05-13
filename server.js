@@ -65,6 +65,10 @@ app.use('/delevery-man', deleveryManRoute);
 const userRoute = require('./router/user');
 app.use('/user', userRoute);
 
+//login Route
+const loginRoute = require('./router/login');
+app.use('/login', loginRoute);
+
 //logout Route
 const logoutRoute = require('./router/logout');
 app.use('/logout', logoutRoute);

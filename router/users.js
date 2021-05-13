@@ -1,13 +1,11 @@
 const router = require('express').Router();
 const User = require('../model/users')
 const TempUser = require('../model/temp')
-const { registerUser, loginUser, checkCookie, resetPassCookie, checkRole, userAuth, updateUser } = require('../middlewere/auth');
+const { registerUser, loginUser, checkCookie, resetPassword, resetPassCookie, checkRole, userAuth, updateUser } = require('../middlewere/auth');
 const { sendMail, randomInteger } = require('../middlewere/mailer')
-var nodemailer = require('nodemailer');
 
 router.get('/', (req, res) => {
     try {
-        console.log(req.body);
         res.render(`users/reset-password`);
     } catch (error) {
         res.json({
@@ -60,15 +58,13 @@ router.post('/reset-password-p1', async (req, res) => {
                 email: user.email
             })
             const token = await tempUser.generateToken();
-            res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 30000) });
+            res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 300000) });
             await tempUser.save();
-            console.log(secretCode + ' inside 0')
             secretCode = undefined
             if (secretCode == undefined) {
                 secretCode = randomInteger(1111, 9999)
                 console.log(secretCode + ' inside 1')
                 await sendMail(req, res, secretCode);
-                console.log('Let us See what is going on');
                 res.redirect('/users/reset-password-p2');
             }
         }
@@ -88,13 +84,10 @@ router.post('/reset-password-p1', async (req, res) => {
 
 router.get('/reset-password-p2', resetPassCookie, (req, res) => {
     try {
-        console.log(secretCode + 'inside 2')
         setTimeout(() => {
             secretCode = undefined;
-            console.log(req.user.tokens + ' inside 3')
-        }, 30000)
-        console.log(secretCode + 'inside 3')
-        console.log(req.user.tokens + ' inside 3')
+        }, 300000)
+
         res.render(`users/reset-password-p2`);
 
     } catch (error) {
@@ -105,26 +98,26 @@ router.get('/reset-password-p2', resetPassCookie, (req, res) => {
 });
 
 router.post('/reset-password-p2', resetPassCookie, async (req, res) => {
-    console.log(req.user);
-    console.log(secretCode + ' inside x')
     try {
-        const tempUser = await TempUser.findById(req.user.id);
+        const tempUser = await TempUser.findOne({ _id: req.user.id });
         if (req.body.code == secretCode) {
-            console.log('success');
+            const user = await User.findOne({ email: tempUser.email });
             secretCode = undefined;
             req.user.tokens = [];
-            res.clearCookie.jwt
-            await req.user.save()
-            const token = await tempUser.generateToken();
-            await tempUser.save();
+            res.clearCookie('jwt')
+            req.user.save();
+            tempUser.delete();
+            console.log('Success')
+
+            const token = await user.generateToken();
             res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 300000) });
+            await user.save()
             res.redirect('/users/reset-password-p3');
         } else {
             req.user.tokens = [];
             res.clearCookie('jwt');
             await req.user.save();
             console.log('failed')
-            console.log(req.user.tokens + ' inside 4')
             res.render('users/reset-password-p1', { failedMessage: 'true' })
         }
     } catch (error) {
@@ -137,20 +130,20 @@ router.post('/reset-password-p2', resetPassCookie, async (req, res) => {
 
 
 
-router.get('/reset-password-p3', resetPassCookie, async (req, res) => {
+router.get('/reset-password-p3', checkCookie, userAuth, async (req, res) => {
     try {
-        const tempUser = await TempUser.findById(req.user.id);
-        res.render('users/reset-password-p3', { user: tempUser });
+        if (req.user.role != undefined) {
+            const user = await User.findById(req.user.id);
+            res.status(200).render(`users/${user.role}/editPassword`, { user: user });
+        } else {
+            res.render('users/reset-password-p1', { failedMessage: 'true' });
+        }
     } catch (error) {
         console.log(error);
         res.json({
             m: 'What now ?'
         })
     }
-});
-
-router.put('/reset-password-p3', resetPassCookie, async (req, res) => {
-    res.render('users/reset-password-p3')
 });
 
 module.exports = router

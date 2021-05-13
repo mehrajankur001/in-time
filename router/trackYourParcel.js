@@ -17,10 +17,8 @@ router.get('/', async (req, res) => {
       Object.keys(searchOptions).length === 0 &&
       searchOptions.constructor === Object
     ) {
-      console.log('OAW');
       currentStatusData.data = [];
     } else {
-      console.log('HOW');
       currentStatusData.data = products;
     }
     res.render('trackParcel/index', {

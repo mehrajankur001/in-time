@@ -1,17 +1,17 @@
 var nodemailer = require('nodemailer');
-const sendMail = async (req, res,secretCode) => {
+const sendMail = async (req, res, secretCode) => {
     try {
         console
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'mehrajd.ankur@gmail.com',
-                pass: 'newworldisnew123$AnkuR'
+                user: 'flash.delevery@gmail.com',
+                pass: '$flash$delevery$'
             }
         });
 
         var mailOptions = {
-            from: 'mehrajd.ankur@gmail.com',
+            from: 'flash.delevery@gmail.com',
             to: req.body.email,
             subject: 'Verify InTime Account',
             text: `Secret Code: ${secretCode}`
